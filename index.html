@@ -812,7 +812,7 @@
                 <input type="date" id="taskDate">
             </div>
             <div class="input-group">
-                <label>Ticket IDs</label>
+                <label>Ticket ID</label>
                 <input type="text" id="ticketID" placeholder="e.g: L3-31Jan26-048642, L3-31Jan26-048725">
             </div>
             <div class="input-group">
@@ -871,15 +871,20 @@
                 <select id="backendSupport">
                     <option value="">Select Support</option>
                     <option>Ahsanul Kabir</option>
+                    <option>Tamim</option>
+                    <option>Nazrul Islam</option>
+                    <option>Rupchan</option>
+                    <option>Amit Hasan</option>
+                    <option>Basudeb Roy</option>
                 </select>
             </div>
             <div class="input-group onu-mac-group">
                 <label>ONU MAC-ADDRESS</label>
-                <textarea id="onuMac" placeholder="Enter ONU Mac If ONU Used" rows="1"></textarea>
+                <input type="text" id="onuMac" placeholder="Enter ONU Mac If ONU Used">
             </div>
         </div>
 
-        <button class="btn-done" id="submitBtn" onclick="submitMultipleTasks()">Submit All Tickets</button>
+        <button class="btn-done" id="submitBtn" onclick="submitMultipleTasks()">Submit Done Task</button>
         
         <div class="task-footer">
             <div class="copyright">
@@ -1017,7 +1022,7 @@
         }
 
         btn.disabled = true;
-        btn.innerHTML = `Processing ${ticketIDs.length} Tickets...`;
+        btn.innerHTML = `Processing ${ticketIDs.length} Tasks...`;
 
         let successCount = 0;
         let errorCount = 0;
@@ -1066,14 +1071,14 @@
         updateTodayTaskCount();
         
         if (successCount > 0) {
-            showToast(`Successfully submitted ${successCount} ticket(s)!`);
+            showToast(`Successfully submitted ${successCount} task(s)!`);
             
             // Success animation
             btn.style.background = "linear-gradient(135deg, #10b981 0%, #0ea5e9 100%)";
-            btn.innerHTML = `✓ ${successCount} Ticket(s) Submitted!`;
+            btn.innerHTML = `✓ ${successCount} Task(s) Submitted!`;
             
             setTimeout(() => {
-                btn.innerHTML = "Submit All Tickets";
+                btn.innerHTML = "Submit Done Task";
                 btn.style.background = "linear-gradient(135deg, #0ea5e9 0%, #10b981 100%)";
             }, 2000);
             
@@ -1081,11 +1086,11 @@
             document.getElementById('ticketID').value = '';
             document.getElementById('onuMac').value = '';
         } else {
-            showToast("Error submitting tickets! Please try again.");
+            showToast("Error submitting tasks! Please try again.");
         }
         
         if (errorCount > 0) {
-            console.warn(`${errorCount} ticket(s) failed to submit`);
+            console.warn(`${errorCount} task(s) failed to submit`);
         }
         
         btn.disabled = false;
