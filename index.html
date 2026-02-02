@@ -21,6 +21,7 @@
             --border: #d1fae5;
             --shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.1);
             --card-shadow: 0 6px 15px rgba(5, 150, 105, 0.08);
+            --checkbox-size: 18px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -268,13 +269,149 @@
             box-shadow: 0 2px 5px rgba(5, 150, 105, 0.05);
         }
 
-        select {
-            height: 42px;
-            overflow: visible;
-            white-space: normal;
+        .checkbox-dropdown {
+            position: relative;
+            cursor: pointer;
         }
 
-        input {
+        .checkbox-dropdown-select {
+            height: 42px;
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 5px rgba(5, 150, 105, 0.05);
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-main);
+            transition: all 0.3s;
+        }
+
+        .checkbox-dropdown-select::after {
+            content: '▼';
+            font-size: 0.7rem;
+            color: var(--primary);
+            transition: transform 0.3s;
+        }
+
+        .checkbox-dropdown.active .checkbox-dropdown-select::after {
+            transform: rotate(180deg);
+        }
+
+        .checkbox-dropdown-select:hover {
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .checkbox-dropdown-options {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(5, 150, 105, 0.15);
+            z-index: 100;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .checkbox-dropdown.active .checkbox-dropdown-options {
+            max-height: 300px;
+            opacity: 1;
+            visibility: visible;
+            overflow-y: auto;
+        }
+
+        .checkbox-option {
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px solid rgba(209, 250, 229, 0.5);
+        }
+
+        .checkbox-option:last-child {
+            border-bottom: none;
+        }
+
+        .checkbox-option:hover {
+            background-color: #f0fdf4;
+        }
+
+        .checkbox-option.selected {
+            background-color: #e6f2ff;
+        }
+
+        .checkbox-custom {
+            width: var(--checkbox-size);
+            height: var(--checkbox-size);
+            border: 2px solid #059669;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .checkbox-custom::after {
+            content: '';
+            width: calc(var(--checkbox-size) - 6px);
+            height: calc(var(--checkbox-size) - 6px);
+            background: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.2s;
+        }
+
+        .checkbox-option.selected .checkbox-custom::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .checkbox-label {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            font-weight: 500;
+            flex-grow: 1;
+        }
+
+        .checkbox-option.selected .checkbox-label {
+            font-weight: 600;
+            color: #059669;
+        }
+
+        .checkbox-dropdown-value {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+        }
+
+        .checkbox-placeholder {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        input, textarea {
             height: 42px;
         }
 
@@ -833,6 +970,21 @@
                 height: 44px;
                 padding: 11px;
             }
+            
+            /* Mobile adjustments for checkbox dropdowns */
+            .checkbox-dropdown-options {
+                position: fixed;
+                top: 50%;
+                left: 10px;
+                right: 10px;
+                transform: translateY(-50%);
+                max-height: 70vh;
+                z-index: 1000;
+            }
+            
+            .checkbox-dropdown.active .checkbox-dropdown-options {
+                max-height: 70vh;
+            }
         }
 
         @keyframes fadeIn {
@@ -877,35 +1029,80 @@
             </div>
             <div class="input-group">
                 <label>Task Category</label>
-                <select id="taskCategory">
-                    <option value="">Select Category</option>
-                    <option>Installation</option>
-                    <option>Troubleshoot</option>
-                    <option>Survey</option>
-                    <option>CR</option>
-                    <option>Non Ticket</option>
-                </select>
+                <div class="checkbox-dropdown" id="taskCategoryDropdown">
+                    <div class="checkbox-dropdown-select">
+                        <span class="checkbox-dropdown-value checkbox-placeholder">Select Category</span>
+                    </div>
+                    <div class="checkbox-dropdown-options">
+                        <div class="checkbox-option" data-value="Installation">
+                            <div class="checkbox-custom"></div>
+                            <span class="checkbox-label">Installation</span>
+                        </div>
+                        <div class="checkbox-option" data-value="Troubleshoot">
+                            <div class="checkbox-custom"></div>
+                            <span class="checkbox-label">Troubleshoot</span>
+                        </div>
+                        <div class="checkbox-option" data-value="Survey">
+                            <div class="checkbox-custom"></div>
+                            <span class="checkbox-label">Survey</span>
+                        </div>
+                        <div class="checkbox-option" data-value="CR">
+                            <div class="checkbox-custom"></div>
+                            <span class="checkbox-label">CR</span>
+                        </div>
+                        <div class="checkbox-option" data-value="Non Ticket">
+                            <div class="checkbox-custom"></div>
+                            <span class="checkbox-label">Non Ticket</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="row row-2">
             <div class="input-group">
                 <label>Task Type</label>
-                <select id="taskType">
-                    <option value="">Select Task Type</option>
-                    <option>Phone support</option>
-                    <option>Physical support</option>
-                    <option>Back office support for Tech</option>
-                </select>
+                <div class="checkbox-dropdown" id="taskTypeDropdown">
+                    <div class="checkbox-dropdown-select">
+                        <span class="checkbox-dropdown-value checkbox-placeholder">Select Task Type</span>
+                    </div>
+                    <div class="checkbox-dropdown-options">
+                        <div class="checkbox-option" data-value="Phone support">
+                            <div class="checkbox-custom"></div>
+                            <span class="checkbox-label">Phone support</span>
+                        </div>
+                        <div class="checkbox-option" data-value="Physical support">
+                            <div class="checkbox-custom"></div>
+                            <span class="checkbox-label">Physical support</span>
+                        </div>
+                        <div class="checkbox-option" data-value="Back office support for Tech">
+                            <div class="checkbox-custom"></div>
+                            <span class="checkbox-label">Back office support for Tech</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="input-group">
                 <label>Team Type</label>
-                <select id="teamType" style="overflow: visible; white-space: normal;">
-                    <option value="">Select Team Type</option>
-                    <option>Engineer</option>
-                    <option>Single Tech & Engineer</option>
-                    <option>FI Team</option>
-                </select>
+                <div class="checkbox-dropdown" id="teamTypeDropdown">
+                    <div class="checkbox-dropdown-select">
+                        <span class="checkbox-dropdown-value checkbox-placeholder">Select Team Type</span>
+                    </div>
+                    <div class="checkbox-dropdown-options">
+                        <div class="checkbox-option" data-value="Engineer">
+                            <div class="checkbox-custom"></div>
+                            <span class="checkbox-label">Engineer</span>
+                        </div>
+                        <div class="checkbox-option" data-value="Single Tech & Engineer">
+                            <div class="checkbox-custom"></div>
+                            <span class="checkbox-label">Single Tech & Engineer</span>
+                        </div>
+                        <div class="checkbox-option" data-value="FI Team">
+                            <div class="checkbox-custom"></div>
+                            <span class="checkbox-label">FI Team</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -931,7 +1128,7 @@
                 <select id="backendSupport">
                     <option value="">Select Support</option>
                     <option>Ahsanul Kabir</option>
-                      <option>Tamim</option>
+                    <option>Tamim</option>
                     <option>Nazrul Islam</option>
                     <option>Rupchan</option>
                     <option>Amit Hasan</option>
@@ -1005,6 +1202,90 @@
 <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbze5QMUKKDldFJrkBme4z8fGA8Y79kGgfkrZy_E92QtpdgRcO9U8aRP1tzMKkTtNowHqg/exec';
 
+    // Custom checkbox dropdown functionality
+    class CheckboxDropdown {
+        constructor(elementId) {
+            this.dropdown = document.getElementById(elementId);
+            this.select = this.dropdown.querySelector('.checkbox-dropdown-select');
+            this.optionsContainer = this.dropdown.querySelector('.checkbox-dropdown-options');
+            this.valueElement = this.dropdown.querySelector('.checkbox-dropdown-value');
+            this.options = this.dropdown.querySelectorAll('.checkbox-option');
+            this.selectedOption = null;
+            this.isOpen = false;
+            
+            this.init();
+        }
+        
+        init() {
+            // Toggle dropdown on click
+            this.select.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggle();
+            });
+            
+            // Handle option selection
+            this.options.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.selectOption(option);
+                });
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', () => {
+                if (this.isOpen) {
+                    this.close();
+                }
+            });
+        }
+        
+        toggle() {
+            this.isOpen ? this.close() : this.open();
+        }
+        
+        open() {
+            this.dropdown.classList.add('active');
+            this.isOpen = true;
+        }
+        
+        close() {
+            this.dropdown.classList.remove('active');
+            this.isOpen = false;
+        }
+        
+        selectOption(option) {
+            // Remove selection from all options
+            this.options.forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Add selection to clicked option
+            option.classList.add('selected');
+            this.selectedOption = option;
+            
+            // Update displayed value
+            const value = option.getAttribute('data-value');
+            this.valueElement.textContent = value;
+            this.valueElement.classList.remove('checkbox-placeholder');
+            
+            // Close dropdown
+            this.close();
+        }
+        
+        getValue() {
+            return this.selectedOption ? this.selectedOption.getAttribute('data-value') : '';
+        }
+        
+        reset() {
+            this.options.forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            this.selectedOption = null;
+            this.valueElement.textContent = this.valueElement.getAttribute('data-placeholder') || 'Select...';
+            this.valueElement.classList.add('checkbox-placeholder');
+        }
+    }
+
     window.onload = function() {
         updateClock();
         loadStoredData();
@@ -1013,6 +1294,11 @@
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('taskDate').value = today;
         document.getElementById('filterDate').value = today;
+        
+        // Initialize checkbox dropdowns
+        window.taskCategoryDropdown = new CheckboxDropdown('taskCategoryDropdown');
+        window.taskTypeDropdown = new CheckboxDropdown('taskTypeDropdown');
+        window.teamTypeDropdown = new CheckboxDropdown('teamTypeDropdown');
     };
 
     function updateClock() {
@@ -1095,9 +1381,9 @@
         // Get other form data
         const commonData = {
             date: document.getElementById('taskDate').value,
-            category: document.getElementById('taskCategory').value,
-            taskType: document.getElementById('taskType').value,
-            teamType: document.getElementById('teamType').value,
+            category: window.taskCategoryDropdown.getValue(),
+            taskType: window.taskTypeDropdown.getValue(),
+            teamType: window.teamTypeDropdown.getValue(),
             engineer: document.getElementById('engineerName').value,
             backend: document.getElementById('backendSupport').value,
             onuMac: document.getElementById('onuMac').value
@@ -1269,5 +1555,3 @@
 
 </body>
 </html>
-
-
