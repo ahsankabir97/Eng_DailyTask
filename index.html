@@ -98,7 +98,7 @@
 
         .header-left h1 { 
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.06rem; 
+            font-size: 1.05rem; 
             font-weight: 800;
             text-transform: uppercase; 
             letter-spacing: 0.7px;
@@ -110,7 +110,7 @@
 
         .company-name {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.20rem;
+            font-size: 1.00rem;
             font-weight: 700;
             letter-spacing: 0.3px;
             color: #003399;
@@ -224,7 +224,7 @@
             width: 100%;
             height: 4px;
             background: linear-gradient(90deg, #059669, #10b981, #34d399);
-        }
+        }]
 
         .card:hover {
             transform: translateY(-4px);
@@ -811,10 +811,7 @@
                 <label>Work Date</label>
                 <input type="date" id="taskDate">
             </div>
-            <div class="input-group">
-                <label>Ticket ID</label>
-                <input type="text" id="ticketID" placeholder="e.g: L3-31Jan26-048642, L3-31Jan26-048725">
-            </div>
+            <div class="input-group"><label>Ticket ID</label><input type="text" id="ticketID" placeholder="Enter Ticket ID"></div>
             <div class="input-group">
                 <label>Task Category</label>
                 <select id="taskCategory">
@@ -867,11 +864,11 @@
                 </select>
             </div>
             <div class="input-group">
-                <label>BNOC/Backend Support</label>
+                <label>BNOC Support</label>
                 <select id="backendSupport">
                     <option value="">Select Support</option>
                     <option>Ahsanul Kabir</option>
-                    <option>Tamim</option>
+                     <option>Tamim</option>
                     <option>Nazrul Islam</option>
                     <option>Rupchan</option>
                     <option>Amit Hasan</option>
@@ -880,11 +877,11 @@
             </div>
             <div class="input-group onu-mac-group">
                 <label>ONU MAC-ADDRESS</label>
-                <input type="text" id="onuMac" placeholder="Enter ONU Mac If ONU Used">
+                <textarea id="onuMac" placeholder="Enter ONU Mac If ONU Used" rows="1"></textarea>
             </div>
         </div>
 
-        <button class="btn-done" id="submitBtn" onclick="submitMultipleTasks()">Submit Done Task</button>
+        <button class="btn-done" id="submitBtn" onclick="submitTask()">Task Done</button>
         
         <div class="task-footer">
             <div class="copyright">
@@ -987,23 +984,11 @@
         }, 3000);
     }
 
-    // Function to split multiple ticket IDs
-    function splitTicketIDs(ticketInput) {
-        if (!ticketInput) return [];
-        
-        // Split by comma and clean up each ticket
-        return ticketInput.split(',')
-            .map(ticket => ticket.trim())
-            .filter(ticket => ticket.length > 0);
-    }
-
-    async function submitMultipleTasks() {
+    async function submitTask() {
         const btn = document.getElementById('submitBtn');
-        const ticketInput = document.getElementById('ticketID').value;
-        
-        // Get other form data
-        const commonData = {
+        const formData = {
             date: document.getElementById('taskDate').value,
+            ticket: document.getElementById('ticketID').value,
             category: document.getElementById('taskCategory').value,
             taskType: document.getElementById('taskType').value,
             teamType: document.getElementById('teamType').value,
@@ -1012,88 +997,44 @@
             onuMac: document.getElementById('onuMac').value
         };
 
-        // Split multiple ticket IDs
-        const ticketIDs = splitTicketIDs(ticketInput);
-
-        // Validation
-        if (ticketIDs.length === 0 || !commonData.category || !commonData.engineer) {
-            showToast("Please fill required fields (Ticket IDs, Category, Engineer)!");
+        if(!formData.ticket || !formData.category || !formData.engineer) {
+            showToast("Please fill required fields!");
             return;
         }
 
         btn.disabled = true;
-        btn.innerHTML = `Processing ${ticketIDs.length} Tasks...`;
+        btn.innerHTML = "Processing...";
 
-        let successCount = 0;
-        let errorCount = 0;
-
-        // Process each ticket ID
-        for (let i = 0; i < ticketIDs.length; i++) {
-            const ticketID = ticketIDs[i];
+        try {
+            await fetch(scriptURL, { 
+                method: 'POST', 
+                mode: 'no-cors', 
+                body: JSON.stringify(formData) 
+            });
             
-            // Create individual data object for each ticket
-            const formData = {
-                ...commonData,
-                ticket: ticketID
-            };
-
-            try {
-                // Send to Google Sheets (if needed)
-                await fetch(scriptURL, { 
-                    method: 'POST', 
-                    mode: 'no-cors', 
-                    body: JSON.stringify(formData) 
-                });
-                
-                // Save locally
-                saveDataLocally(formData);
-                
-                // Add to table
-                addTableRow(formData);
-                
-                successCount++;
-                
-                // Update button text with progress
-                if (ticketIDs.length > 1) {
-                    btn.innerHTML = `Processing ${i+1}/${ticketIDs.length}...`;
-                }
-                
-            } catch (error) {
-                errorCount++;
-                console.error(`Error processing ticket ${ticketID}:`, error);
-            }
+            saveDataLocally(formData);
+            addTableRow(formData);
             
-            // Small delay between requests to avoid rate limiting
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
-
-        // Final update
-        updateTodayTaskCount();
-        
-        if (successCount > 0) {
-            showToast(`Successfully submitted ${successCount} task(s)!`);
+            updateTodayTaskCount();
             
-            // Success animation
+            showToast("Task Submitted Successfully!");
+            
+            // Update button appearance on success
             btn.style.background = "linear-gradient(135deg, #10b981 0%, #0ea5e9 100%)";
-            btn.innerHTML = `✓ ${successCount} Task(s) Submitted!`;
-            
+            btn.innerHTML = "✓ Success!";
             setTimeout(() => {
-                btn.innerHTML = "Submit Done Task";
+                btn.innerHTML = "Task Done";
                 btn.style.background = "linear-gradient(135deg, #0ea5e9 0%, #10b981 100%)";
-            }, 2000);
+            }, 1500);
             
-            // Clear input fields
             document.getElementById('ticketID').value = '';
             document.getElementById('onuMac').value = '';
-        } else {
-            showToast("Error submitting tasks! Please try again.");
+            
+        } catch (error) {
+            showToast("Error sending data! Please try again.");
+        } finally {
+            btn.disabled = false;
         }
-        
-        if (errorCount > 0) {
-            console.warn(`${errorCount} task(s) failed to submit`);
-        }
-        
-        btn.disabled = false;
     }
 
     function addTableRow(data) {
@@ -1177,9 +1118,6 @@
 </script>
 
 </body>
+
 </html>
-
-
-
-
 
