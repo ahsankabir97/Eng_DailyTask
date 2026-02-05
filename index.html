@@ -1422,6 +1422,33 @@
             .filter(ticket => ticket.length > 0);
     }
 
+    // Function to validate required fields
+    function validateRequiredFields(ticketInput, category, taskType, teamType, engineer) {
+        const errors = [];
+        
+        if (!ticketInput || ticketInput.trim() === '') {
+            errors.push("Ticket ID");
+        }
+        
+        if (!category || category.trim() === '') {
+            errors.push("Task Category");
+        }
+        
+        if (!taskType || taskType.trim() === '') {
+            errors.push("Task Type");
+        }
+        
+        if (!teamType || teamType.trim() === '') {
+            errors.push("Team Type");
+        }
+        
+        if (!engineer || engineer.trim() === '') {
+            errors.push("Engineer Name");
+        }
+        
+        return errors;
+    }
+
     async function submitMultipleTasks() {
         const btn = document.getElementById('submitBtn');
         const ticketInput = document.getElementById('ticketID').value;
@@ -1437,12 +1464,26 @@
             onuMac: document.getElementById('onuMac').value
         };
 
+        // Validate required fields
+        const errors = validateRequiredFields(
+            ticketInput, 
+            commonData.category, 
+            commonData.taskType, 
+            commonData.teamType, 
+            commonData.engineer
+        );
+        
+        if (errors.length > 0) {
+            showToast(`Please fill required fields: ${errors.join(", ")}`, "warning");
+            return;
+        }
+
         // Split multiple ticket IDs
         const ticketIDs = splitTicketIDs(ticketInput);
 
-        // Validation
-        if (ticketIDs.length === 0 || !commonData.category || !commonData.engineer) {
-            showToast("Please fill required fields (Ticket IDs, Category, Engineer)!", "warning");
+        // Validation for ticket IDs
+        if (ticketIDs.length === 0) {
+            showToast("Please enter at least one Ticket ID!", "warning");
             return;
         }
 
@@ -1603,5 +1644,3 @@
 
 </body>
 </html>
-
-
