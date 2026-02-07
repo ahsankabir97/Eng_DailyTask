@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Work Log | Task Tracker</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #059669;
@@ -97,16 +98,64 @@
             filter: blur(6px);
         }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .company-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            min-width: 90px;
+        }
+
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #003399;
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 
+                         0 1px 0 rgba(255, 255, 255, 0.5);
+            line-height: 1;
+        }
+
+        .logo-tagline {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.5rem;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-top: 2px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-title-container {
+            display: flex;
+            flex-direction: column;
+        }
+
         .header-left h1 { 
             font-family: 'Montserrat', sans-serif;
             font-size: 1.15rem; 
             font-weight: 800;
             text-transform: uppercase; 
             letter-spacing: 0.7px;
-            position: relative;
-            z-index: 1;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             margin-bottom: 3px;
+            color: white;
         }
 
         .company-name {
@@ -115,9 +164,7 @@
             font-weight: 700;
             letter-spacing: 0.3px;
             color: #003399;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 1px 3px rgba(0, 51, 153, 0.3), 
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 
                          0 1px 0 rgba(255, 255, 255, 0.5);
         }
 
@@ -250,10 +297,24 @@
             gap: 4px;
         }
 
-        label::before {
-            content: '▸';
-            color: var(--primary);
+        /* Colorful icons for labels */
+        label i {
             font-size: 0.8rem;
+            min-width: 16px;
+            text-align: center;
+        }
+        
+        .fa-calendar-alt { color: #059669; }
+        .fa-ticket-alt { color: #3b82f6; }
+        .fa-tasks { color: #8b5cf6; }
+        .fa-toolbox { color: #10b981; }
+        .fa-users { color: #f59e0b; }
+        .fa-user-cog { color: #0ea5e9; }
+        .fa-headset { color: #8b5cf6; }
+        .fa-network-wired { color: #ef4444; }
+
+        .input-group.onu-mac-group label i {
+            color: #8b5cf6;
         }
 
         input, select, textarea {
@@ -269,14 +330,40 @@
             box-shadow: 0 2px 5px rgba(5, 150, 105, 0.05);
         }
 
-        /* Greenish hover effect for select dropdown options */
+        /* Engineer and Backend dropdowns with #CEFAFE background */
+        #engineerName option,
+        #backendSupport option {
+            background-color: #ECFEFF !important;
+            color: var(--text-main) !important;
+            padding: 12px !important;
+            font-weight: 500 !important;
+            border-bottom: 1px solid rgba(209, 250, 229, 0.5) !important;
+        }
+
+        /* Hover effect for engineer and backend options */
+        #engineerName option:hover,
+        #backendSupport option:hover {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+            color: #065f46 !important;
+            font-weight: 600 !important;
+        }
+
+        /* Selected option */
+        #engineerName option:checked,
+        #backendSupport option:checked {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+            color: white !important;
+            font-weight: 600 !important;
+        }
+
+        /* Greenish hover effect for other select dropdown options */
         select option {
             padding: 10px;
             transition: all 0.2s;
         }
 
         select option:hover {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
             color: #065f46;
         }
 
@@ -299,22 +386,6 @@
             border-color: var(--primary);
             background-color: white;
             box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
-        }
-
-        /* Specific styling for engineer dropdowns */
-        #engineerName option,
-        #backendSupport option {
-            background: white;
-            color: var(--text-main);
-            padding: 12px;
-            font-weight: 500;
-        }
-
-        #engineerName option:not([value=""]):hover,
-        #backendSupport option:not([value=""]):hover {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
-            color: #065f46 !important;
-            font-weight: 600;
         }
 
         .checkbox-dropdown {
@@ -363,7 +434,7 @@
             top: calc(100% + 5px);
             left: 0;
             right: 0;
-            background: white;
+            background: #ECFEFF;
             border: 1.5px solid var(--border);
             border-radius: 10px;
             box-shadow: 0 8px 20px rgba(5, 150, 105, 0.15);
@@ -503,6 +574,11 @@
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
+        .btn-done i {
+            font-size: 1.1rem;
+            color: white;
+        }
+
         .btn-done::before {
             content: '';
             position: absolute;
@@ -540,11 +616,6 @@
             text-shadow: none;
         }
 
-        .btn-done::after {
-            content: '✓';
-            font-size: 1.1rem;
-        }
-
         .input-group.onu-mac-group label {
             font-family: 'Trebuchet MS', sans-serif;
             color: var(--text-label);
@@ -572,86 +643,103 @@
         }
 
         .table-header { 
-    padding: 14px 18px; 
-    background: linear-gradient(90deg, #e6f7f0 0%, #d1f2e5 100%); /* Light green gradient */
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900; 
-    color: #059669; /* Changed to green color */
-    border-bottom: 2px solid #10b981; /* Green border */
-    text-transform: uppercase; 
-    letter-spacing: 0.7px;
-    font-size: 0.8rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+            padding: 14px 18px; 
+            background: linear-gradient(90deg, #e6f7f0 0%, #d1f2e5 100%);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900; 
+            color: #059669;
+            border-bottom: 2px solid #10b981;
+            text-transform: uppercase; 
+            letter-spacing: 0.7px;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.table-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+        .table-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-.table-filters {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-left: auto;
-    margin-right: 10px;
-}
+        .table-title i {
+            color: #0ea5e9;
+            font-size: 1.1rem;
+        }
 
-.date-filter {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
+        .table-filters {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            margin-right: 10px;
+        }
 
-.date-filter-label {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 800;
-    color: #047857; /* Darker green */
-    white-space: nowrap;
-}
+        .date-filter {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-.date-filter-input {
-    padding: 5px 8px;
-    border: 1.5px solid #34d399; /* Light green border */
-    border-radius: 6px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 0.7rem;
-    background: white;
-    color: var(--text-main);
-    width: 110px;
-    height: 30px;
-}
+        .date-filter-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: #047857;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-.date-filter-input:focus {
-    border-color: #10b981; /* Green focus */
-    outline: none;
-}
+        .date-filter-label i {
+            color: #059669;
+        }
 
-.filter-btn {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%); /* Green gradient */
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
+        .date-filter-input {
+            padding: 5px 8px;
+            border: 1.5px solid #34d399;
+            border-radius: 6px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            background: white;
+            color: var(--text-main);
+            width: 110px;
+            height: 30px;
+        }
 
-.filter-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); /* Green shadow */
-}
+        .date-filter-input:focus {
+            border-color: #10b981;
+            outline: none;
+        }
+
+        .filter-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .filter-btn i {
+            color: white;
+            font-size: 0.7rem;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+        }
 
         .clear-btn {
             background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
@@ -673,6 +761,11 @@
             height: 32px;
             position: relative;
             overflow: hidden;
+        }
+
+        .clear-btn i {
+            color: white;
+            font-size: 0.8rem;
         }
 
         .clear-btn::before {
@@ -824,7 +917,7 @@
         }
 
         .toast-icon {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: rgba(255, 255, 255, 0.95);
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             background: rgba(255, 255, 255, 0.2);
@@ -840,7 +933,7 @@
         }
 
         #toastMessage {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 600;
             letter-spacing: 0.3px;
             line-height: 1.4;
@@ -912,14 +1005,30 @@
                 flex-direction: column; 
                 text-align: center; 
                 padding: 10px; 
-                gap: 8px;
+                gap: 10px;
             } 
+            .header-left {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 10px;
+            }
             .header-left h1 {
                 font-size: 0.9rem;
                 margin-bottom: 4px;
             }
             .company-name {
                 font-size: 0.85rem;
+            }
+            .company-logo {
+                min-width: 80px;
+                padding: 6px 10px;
+            }
+            .logo-text {
+                font-size: 1.2rem;
+            }
+            .logo-tagline {
+                font-size: 0.45rem;
             }
             .header-left, .header-right {
                 text-align: center;
@@ -1050,8 +1159,14 @@
 <div class="container">
     <header>
         <div class="header-left">
-            <h1>Daily Work Dashboard (Motijheel)</h1>
-            <div class="company-name">Link3 Technologies Ltd</div>
+            <div class="company-logo">
+                <div class="logo-text">Link3</div>
+                <div class="logo-tagline">THE Service Company</div>
+            </div>
+            <div class="header-title-container">
+                <h1>Daily Work Dashboard</h1>
+                <div class="company-name">Motijheel Zone</div>
+            </div>
         </div>
         <div class="header-right">
             <div class="datetime-container">
@@ -1068,15 +1183,16 @@
     <div class="card">
         <div class="row row-3">
             <div class="input-group">
-                <label>Work Date</label>
+                <label><i class="fas fa-calendar-alt"></i> Work Date</label>
                 <input type="date" id="taskDate">
             </div>
+
             <div class="input-group">
-                <label>Ticket ID</label>
-                <input type="text" id="ticketID" placeholder="e.g. L3-31Jan26-XXX,L3-31Jan26-XXX">
+                <label><i class="fas fa-ticket-alt"></i> Ticket ID</label>
+                <input type="text" id="ticketID" placeholder="e.g. L3-31Jan26-XXX,L3-31Jan26-YYY">
             </div>
             <div class="input-group">
-                <label>Task Category</label>
+                <label><i class="fas fa-tasks"></i> Task Category</label>
                 <div class="checkbox-dropdown" id="taskCategoryDropdown">
                     <div class="checkbox-dropdown-select">
                         <span class="checkbox-dropdown-value checkbox-placeholder">Select Category</span>
@@ -1109,7 +1225,7 @@
 
         <div class="row row-2">
             <div class="input-group">
-                <label>Task Type</label>
+                <label><i class="fas fa-toolbox"></i> Task Type</label>
                 <div class="checkbox-dropdown" id="taskTypeDropdown">
                     <div class="checkbox-dropdown-select">
                         <span class="checkbox-dropdown-value checkbox-placeholder">Select Task Type</span>
@@ -1131,7 +1247,7 @@
                 </div>
             </div>
             <div class="input-group">
-                <label>Team Type</label>
+                <label><i class="fas fa-users"></i> Team Type</label>
                 <div class="checkbox-dropdown" id="teamTypeDropdown">
                     <div class="checkbox-dropdown-select">
                         <span class="checkbox-dropdown-value checkbox-placeholder">Select Team Type</span>
@@ -1156,7 +1272,7 @@
 
         <div class="row row-3">
             <div class="input-group">
-                <label>Engineer Name</label>
+                <label><i class="fas fa-user-cog"></i> Engineer Name</label>
                 <select id="engineerName">
                     <option value="">Select Engineer</option>
                     <option>Ahsanul Kabir</option>
@@ -1172,7 +1288,7 @@
                 </select>
             </div>
             <div class="input-group">
-                <label>BNOC/Backend Support</label>
+                <label><i class="fas fa-headset"></i> BNOC/Backend Support</label>
                 <select id="backendSupport">
                     <option value="">Select Support</option>
                     <option>Ahsanul Kabir</option>
@@ -1184,12 +1300,14 @@
                 </select>
             </div>
             <div class="input-group onu-mac-group">
-                 <label>ONU MAC-ADDRESS</label>
+                 <label><i class="fas fa-network-wired"></i> ONU MAC-ADDRESS</label>
                 <input type="text" id="onuMac" placeholder="Enter ONU Mac If used">
             </div>
         </div>
 
-        <button class="btn-done" id="submitBtn" onclick="submitMultipleTasks()">Submit Done Tickets</button>
+        <button class="btn-done" id="submitBtn" onclick="submitMultipleTasks()">
+            <i class="fas fa-paper-plane"></i> Submit Done Tickets
+        </button>
         
         <div class="task-footer">
             <div class="copyright">
@@ -1201,39 +1319,35 @@
     <div class="table-section">
         <div class="table-header">
             <div class="table-title">
-                <span>📊 Completed Task</span>
+                <i class="fas fa-chart-bar"></i>
+                <span>Completed Task</span>
             </div>
             <div class="table-filters">
                 <div class="date-filter">
-                    <span class="date-filter-label">Filter by Date:</span>
+                    <span class="date-filter-label">
+                        <i class="fas fa-filter"></i> Filter by Date:
+                    </span>
                     <input type="date" id="filterDate" class="date-filter-input">
                     <button class="filter-btn" onclick="filterByDate()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                        </svg>
-                        Filter
+                        <i class="fas fa-search"></i> Filter
                     </button>
                 </div>
             </div>
             <button class="clear-btn" id="clearTableBtn" onclick="clearTable()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                </svg>
-                Clear Table
+                <i class="fas fa-trash-alt"></i> Clear Table
             </button>
         </div>
         <div class="table-wrapper">
             <table id="completedTable">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Ticket ID</th>
-                        <th>Category</th>
-                        <th>Engineer</th>
-                        <th>Backend</th>
-                        <th>ONU MAC</th>
-                        <th>Status</th>
+                        <th><i class="fas fa-calendar-day"></i> Date</th>
+                        <th><i class="fas fa-ticket-alt"></i> Ticket ID</th>
+                        <th><i class="fas fa-tag"></i> Category</th>
+                        <th><i class="fas fa-user-cog"></i> Engineer</th>
+                        <th><i class="fas fa-headset"></i> Backend</th>
+                        <th><i class="fas fa-network-wired"></i> ONU MAC</th>
+                        <th><i class="fas fa-check-circle"></i> Status</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -1488,7 +1602,7 @@
         }
 
         btn.disabled = true;
-        btn.innerHTML = `Processing ${ticketIDs.length} Tickets...`;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing ${ticketIDs.length} Tickets...`;
 
         let successCount = 0;
         let errorCount = 0;
@@ -1521,7 +1635,7 @@
                 
                 // Update button text with progress
                 if (ticketIDs.length > 1) {
-                    btn.innerHTML = `Processing ${i+1}/${ticketIDs.length}...`;
+                    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing ${i+1}/${ticketIDs.length}...`;
                 }
                 
             } catch (error) {
@@ -1541,10 +1655,10 @@
             
             // Success animation
             btn.style.background = "linear-gradient(135deg, #10b981 0%, #0ea5e9 100%)";
-            btn.innerHTML = `✓ ${successCount} Ticket(s) Submitted!`;
+            btn.innerHTML = `<i class="fas fa-check-circle"></i> ${successCount} Ticket(s) Submitted!`;
             
             setTimeout(() => {
-                btn.innerHTML = "Submit Done Tickets";
+                btn.innerHTML = `<i class="fas fa-paper-plane"></i> Submit Done Tickets`;
                 btn.style.background = "linear-gradient(135deg, #0ea5e9 0%, #10b981 100%)";
             }, 2000);
             
@@ -1623,9 +1737,7 @@
             
             const clearBtn = document.getElementById('clearTableBtn');
             clearBtn.disabled = true;
-            clearBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
-            </svg> Cleared`;
+            clearBtn.innerHTML = `<i class="fas fa-check"></i> Cleared`;
             
             updateTodayTaskCount();
             
@@ -1633,10 +1745,7 @@
             
             setTimeout(() => {
                 clearBtn.disabled = false;
-                clearBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                </svg> Clear Table`;
+                clearBtn.innerHTML = `<i class="fas fa-trash-alt"></i> Clear Table`;
             }, 1500);
         }
     }
@@ -1644,4 +1753,3 @@
 
 </body>
 </html>
-
