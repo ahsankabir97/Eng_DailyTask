@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Engineer Task Dashboard</title>
+    <title>Engineer Task Dashboard · WiFi Scoring</title>
     <link rel="icon" href="link3-favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -279,6 +279,7 @@
             gap: 4px;
         }
 
+
         label i {
             font-size: 0.8rem;
             min-width: 16px;
@@ -504,10 +505,10 @@
             font-style: italic;
         }
 
-        /* BNOC TOGGLE BUTTON STYLES */
-        .bnoc-toggle-btn {
+        /* ============= TOGGLE BUTTON STYLES (shared) ============= */
+        .toggle-btn {
             width: 100%;
-            height: 38px;
+            height: 42px;
             padding: 0 14px;
             border: 1.5px solid var(--border);
             border-radius: 10px;
@@ -525,23 +526,23 @@
             box-shadow: 0 2px 5px rgba(5, 150, 105, 0.05);
         }
 
-        .bnoc-toggle-btn .status-text {
+        .toggle-btn .status-text {
             flex: 1;
             text-align: center;
         }
 
-        .bnoc-toggle-btn .toggle-icon {
+        .toggle-btn .toggle-icon {
             font-size: 0.8rem;
             transition: transform 0.3s;
         }
 
-        .bnoc-toggle-btn:hover {
+        .toggle-btn:hover {
             border-color: #34d399;
             transform: translateY(-1px);
         }
 
         /* Active (YES) State */
-        .bnoc-toggle-btn.active {
+        .toggle-btn.active {
             border-color: transparent;
             background: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
             color: white;
@@ -550,9 +551,19 @@
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
         
-        .bnoc-toggle-btn.active .toggle-icon {
-            transform: rotate(180deg);
+        .toggle-btn.active .toggle-icon {
+            transform: rotate(0deg);
             color: white;
+        }
+
+        /* BNOC specific */
+        .bnoc-toggle-btn.active .toggle-icon {
+            transform: rotate(0deg);
+        }
+
+        /* WiFi scoring specific - same visual language */
+        .wifi-toggle-btn .toggle-icon {
+            font-size: 0.8rem;
         }
 
         input, textarea {
@@ -834,7 +845,7 @@
         table { 
             width: 100%; 
             border-collapse: collapse; 
-            min-width: 800px;
+            min-width: 850px;
         }
         
         th { 
@@ -843,8 +854,7 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 0.65rem; 
             background: #eff6ff;
-            color: #1e40af;
-            text-transform: uppercase; 
+            color: #1e40af;            /* softer deep blue for header */
             border-bottom: 2px solid #93c5fd;
             letter-spacing: 0.5px;
             font-weight: 800;
@@ -1176,11 +1186,9 @@
 <div class="container">
     <header>
         <div class="header-left">
-            <!-- Updated Logo Section with Image -->
             <div class="company-logo">
                 <img src="https://z-cdn-media.chatglm.cn/files/ec97a2bb-1f62-4aa3-b8dd-d7c5349ef71e.png?auth_key=1870751333-bce0d43ce17a472f82b7ca62e6852b21-0-33f4b6311a64ec23a2a122fb5366adb1" alt="Link3 Logo">
             </div>
-            
             <div class="header-title-container">
                 <h1>Daily Work Dashboard</h1>
                 <div class="company-name">Motijheel Zone</div>
@@ -1241,7 +1249,8 @@
             </div>
         </div>
 
-        <div class="row row-2">
+        <!-- row with 3 columns: Task Type / Team Type / NEW WiFi Scoring toggle -->
+        <div class="row row-3">
             <div class="input-group">
                 <label><i class="fas fa-toolbox"></i> Task Type</label>
                 <div class="checkbox-dropdown" id="taskTypeDropdown">
@@ -1286,6 +1295,15 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- ===== WiFi Scoring Toggle Button ===== -->
+            <div class="input-group">
+                <label><i class="fas fa-wifi"></i> WiFi Scoring</label>
+                <button type="button" id="wifiScoringToggle" class="toggle-btn wifi-toggle-btn">
+                    <span class="status-text">No</span>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </button>
+            </div>
         </div>
 
         <div class="row row-3">
@@ -1306,10 +1324,10 @@
                 </select>
             </div>
             
-            <!-- BNOC Support: Toggle Button -->
+            <!-- BNOC Support: Toggle Button - when NO, send blank to sheet -->
             <div class="input-group">
                 <label><i class="fas fa-headset"></i> BNOC Support</label>
-                <button type="button" id="bnocToggle" class="bnoc-toggle-btn">
+                <button type="button" id="bnocToggle" class="toggle-btn bnoc-toggle-btn">
                     <span class="status-text">No</span>
                     <i class="fas fa-chevron-down toggle-icon"></i>
                 </button>
@@ -1362,6 +1380,7 @@
                         <th><i class="fas fa-tag"></i> Category</th>
                         <th><i class="fas fa-user-cog"></i> Engineer</th>
                         <th><i class="fas fa-headset"></i> Backend</th>
+                        <th><i class="fas fa-wifi"></i> WiFi Scoring</th> <!-- NEW COLUMN -->
                         <th><i class="fas fa-network-wired"></i> ONU MAC</th>
                         <th><i class="fas fa-check-circle"></i> Status</th>
                     </tr>
@@ -1378,7 +1397,7 @@
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbze5QMUKKDldFJrkBme4z8fGA8Y79kGgfkrZy_E92QtpdgRcO9U8aRP1tzMKkTtNowHqg/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbw1P1v4U7HecEaf7sKSaQCEJ3RYIc4uNVuMoSFe15yNyzvlxauusLE7Xj2CrwYrHZy5Ew/exec';
 
     // Custom checkbox dropdown functionality
     class CheckboxDropdown {
@@ -1395,13 +1414,11 @@
         }
         
         init() {
-            // Toggle dropdown on click
             this.select.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.toggle();
             });
             
-            // Handle option selection
             this.options.forEach(option => {
                 option.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -1409,7 +1426,6 @@
                 });
             });
             
-            // Close dropdown when clicking outside
             document.addEventListener('click', () => {
                 if (this.isOpen) {
                     this.close();
@@ -1432,21 +1448,14 @@
         }
         
         selectOption(option) {
-            // Remove selection from all options
             this.options.forEach(opt => {
                 opt.classList.remove('selected');
             });
-            
-            // Add selection to clicked option
             option.classList.add('selected');
             this.selectedOption = option;
-            
-            // Update displayed value
             const value = option.getAttribute('data-value');
             this.valueElement.textContent = value;
             this.valueElement.classList.remove('checkbox-placeholder');
-            
-            // Close dropdown
             this.close();
         }
         
@@ -1459,13 +1468,14 @@
                 opt.classList.remove('selected');
             });
             this.selectedOption = null;
-            this.valueElement.textContent = this.valueElement.getAttribute('data-placeholder') || 'Select...';
+            this.valueElement.textContent = 'Select...';
             this.valueElement.classList.add('checkbox-placeholder');
         }
     }
 
-    // BNOC Toggle State Variable
-    let bnocSupportValue = false; // false = No, true = Yes
+    // ========== TOGGLE STATE VARIABLES ==========
+    let bnocSupportValue = false;        // false = No → sheet gets blank; true = Yes → sheet gets "Ahsanul Kabir"
+    let wifiScoringValue = false;       // false = No, true = Yes (default No)
 
     window.onload = function() {
         updateClock();
@@ -1481,24 +1491,51 @@
         window.taskTypeDropdown = new CheckboxDropdown('taskTypeDropdown');
         window.teamTypeDropdown = new CheckboxDropdown('teamTypeDropdown');
         
-        // Initialize BNOC Toggle Button Logic
+        // ----- BNOC Toggle Logic -----
         const bnocBtn = document.getElementById('bnocToggle');
         const bnocText = bnocBtn.querySelector('.status-text');
         const bnocIcon = bnocBtn.querySelector('.toggle-icon');
         
+        // Ensure initial state: No, value false
+        bnocSupportValue = false;
+        bnocBtn.classList.remove('active');
+        bnocText.textContent = "No";
+        bnocIcon.className = "fas fa-chevron-down toggle-icon";
+
         bnocBtn.addEventListener('click', function() {
-            bnocSupportValue = !bnocSupportValue; // Toggle state
-            
+            bnocSupportValue = !bnocSupportValue;
             if (bnocSupportValue) {
-                // Switch to YES
                 bnocBtn.classList.add('active');
                 bnocText.textContent = "Yes";
                 bnocIcon.className = "fas fa-check toggle-icon";
             } else {
-                // Switch to NO
                 bnocBtn.classList.remove('active');
                 bnocText.textContent = "No";
                 bnocIcon.className = "fas fa-chevron-down toggle-icon";
+            }
+        });
+
+        // ----- NEW WiFi Scoring Toggle Logic -----
+        const wifiBtn = document.getElementById('wifiScoringToggle');
+        const wifiText = wifiBtn.querySelector('.status-text');
+        const wifiIcon = wifiBtn.querySelector('.toggle-icon');
+        
+        // default: No
+        wifiScoringValue = false;
+        wifiBtn.classList.remove('active');
+        wifiText.textContent = "No";
+        wifiIcon.className = "fas fa-chevron-down toggle-icon";
+
+        wifiBtn.addEventListener('click', function() {
+            wifiScoringValue = !wifiScoringValue;
+            if (wifiScoringValue) {
+                wifiBtn.classList.add('active');
+                wifiText.textContent = "Yes";
+                wifiIcon.className = "fas fa-check toggle-icon";   // check mark for YES
+            } else {
+                wifiBtn.classList.remove('active');
+                wifiText.textContent = "No";
+                wifiIcon.className = "fas fa-chevron-down toggle-icon";
             }
         });
     };
@@ -1514,13 +1551,9 @@
     function updateTodayTaskCount() {
         const today = new Date().toISOString().split('T')[0];
         const tasks = JSON.parse(localStorage.getItem('completedTasks')) || [];
-        
         const todayTasks = tasks.filter(task => task.date === today);
-        const todayCount = todayTasks.length;
-        
-        document.getElementById('todayTaskCount').textContent = todayCount;
-        
-        return todayCount;
+        document.getElementById('todayTaskCount').textContent = todayTasks.length;
+        return todayTasks.length;
     }
 
     function showToast(message, type = 'success') {
@@ -1528,10 +1561,8 @@
         const toastMessage = document.getElementById('toastMessage');
         const toastIcon = toast.querySelector('.toast-icon');
         
-        // Set message
         toastMessage.textContent = message;
         
-        // Set icon and color based on type
         if (type === 'error') {
             toast.style.background = 'linear-gradient(135deg, rgba(220, 38, 38, 0.92) 0%, rgba(239, 68, 68, 0.92) 100%)';
             toastIcon.textContent = '✗';
@@ -1545,61 +1576,34 @@
             toastIcon.textContent = 'ℹ';
             toastIcon.style.background = 'rgba(255, 255, 255, 0.25)';
         } else {
-            // Success (default) - Blueish gradient
             toast.style.background = 'linear-gradient(135deg, rgba(14, 165, 233, 0.92) 0%, rgba(59, 130, 246, 0.92) 100%)';
             toastIcon.textContent = '✓';
             toastIcon.style.background = 'rgba(255, 255, 255, 0.2)';
         }
         
-        // Remove any existing show class first
         toast.classList.remove('show');
-        
-        // Trigger reflow
         void toast.offsetWidth;
-        
-        // Add show class with animation
         toast.classList.add('show');
         
-        // Auto-hide after 3 seconds
         setTimeout(() => {
             toast.classList.remove('show');
         }, 3000);
     }
 
-    // Function to split multiple ticket IDs
     function splitTicketIDs(ticketInput) {
         if (!ticketInput) return [];
-        
-        // Split by comma and clean up each ticket
         return ticketInput.split(',')
             .map(ticket => ticket.trim())
             .filter(ticket => ticket.length > 0);
     }
 
-    // Function to validate required fields
     function validateRequiredFields(ticketInput, category, taskType, teamType, engineer) {
         const errors = [];
-        
-        if (!ticketInput || ticketInput.trim() === '') {
-            errors.push("Ticket ID");
-        }
-        
-        if (!category || category.trim() === '') {
-            errors.push("Task Category");
-        }
-        
-        if (!taskType || taskType.trim() === '') {
-            errors.push("Task Type");
-        }
-        
-        if (!teamType || teamType.trim() === '') {
-            errors.push("Team Type");
-        }
-        
-        if (!engineer || engineer.trim() === '') {
-            errors.push("Engineer Name");
-        }
-        
+        if (!ticketInput || ticketInput.trim() === '') errors.push("Ticket ID");
+        if (!category || category.trim() === '') errors.push("Task Category");
+        if (!taskType || taskType.trim() === '') errors.push("Task Type");
+        if (!teamType || teamType.trim() === '') errors.push("Team Type");
+        if (!engineer || engineer.trim() === '') errors.push("Engineer Name");
         return errors;
     }
 
@@ -1607,21 +1611,25 @@
         const btn = document.getElementById('submitBtn');
         const ticketInput = document.getElementById('ticketID').value;
         
-        // Logic for BNOC Support: If Yes -> "Ahsanul Kabir", If No -> "No"
-        const backendValue = bnocSupportValue ? "Ahsanul Kabir" : "No";
+        // BNOC Support value: 
+        // - if Yes → "Ahsanul Kabir" 
+        // - if No  → "" (BLANK) so that Google Sheets cell remains empty, not "No"
+        const backendValue = bnocSupportValue ? "Ahsanul Kabir" : "";
         
-        // Get other form data
+        // WiFi Scoring value: "Yes" or "No" (exactly as per toggle)
+        const wifiScoringResult = wifiScoringValue ? "Yes" : "No";
+
         const commonData = {
             date: document.getElementById('taskDate').value,
             category: window.taskCategoryDropdown.getValue(),
             taskType: window.taskTypeDropdown.getValue(),
             teamType: window.teamTypeDropdown.getValue(),
             engineer: document.getElementById('engineerName').value,
-            backend: backendValue,
+            backend: backendValue,          // blank when No, "Ahsanul Kabir" when Yes
+            wifiScoring: wifiScoringResult, // "Yes" or "No"
             onuMac: document.getElementById('onuMac').value
         };
 
-        // Validate required fields
         const errors = validateRequiredFields(
             ticketInput, 
             commonData.category, 
@@ -1635,10 +1643,7 @@
             return;
         }
 
-        // Split multiple ticket IDs
         const ticketIDs = splitTicketIDs(ticketInput);
-
-        // Validation for ticket IDs
         if (ticketIDs.length === 0) {
             showToast("Please enter at least one Ticket ID!", "warning");
             return;
@@ -1650,33 +1655,24 @@
         let successCount = 0;
         let errorCount = 0;
 
-        // Process each ticket ID
         for (let i = 0; i < ticketIDs.length; i++) {
             const ticketID = ticketIDs[i];
-            
-            // Create individual data object for each ticket
             const formData = {
                 ...commonData,
                 ticket: ticketID
             };
 
             try {
-                // Send to Google Sheets (if needed)
                 await fetch(scriptURL, { 
                     method: 'POST', 
                     mode: 'no-cors', 
                     body: JSON.stringify(formData) 
                 });
                 
-                // Save locally
                 saveDataLocally(formData);
-                
-                // Add to table
                 addTableRow(formData);
-                
                 successCount++;
                 
-                // Update button text with progress
                 if (ticketIDs.length > 1) {
                     btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing ${i+1}/${ticketIDs.length}...`;
                 }
@@ -1686,17 +1682,14 @@
                 console.error(`Error processing ticket ${ticketID}:`, error);
             }
             
-            // Small delay between requests to avoid rate limiting
             await new Promise(resolve => setTimeout(resolve, 100));
         }
 
-        // Final update
         updateTodayTaskCount();
         
         if (successCount > 0) {
             showToast(`Successfully submitted ${successCount} ticket(s)!`, "success");
             
-            // Success animation
             btn.style.background = "linear-gradient(135deg, #10b981 0%, #0ea5e9 100%)";
             btn.innerHTML = `<i class="fas fa-check-circle"></i> ${successCount} Ticket(s) Submitted!`;
             
@@ -1705,16 +1698,23 @@
                 btn.style.background = "linear-gradient(135deg, #0ea5e9 0%, #10b981 100%)";
             }, 2000);
             
-            // Clear input fields (except date)
+            // Clear inputs
             document.getElementById('ticketID').value = '';
             document.getElementById('onuMac').value = '';
             
-            // Reset BNOC to default 'No'
+            // Reset BNOC to default 'No' → value false, button "No"
             bnocSupportValue = false;
             const bnocBtn = document.getElementById('bnocToggle');
             bnocBtn.classList.remove('active');
             bnocBtn.querySelector('.status-text').textContent = "No";
             bnocBtn.querySelector('.toggle-icon').className = "fas fa-chevron-down toggle-icon";
+            
+            // Reset WiFi Scoring to default 'No'
+            wifiScoringValue = false;
+            const wifiBtn = document.getElementById('wifiScoringToggle');
+            wifiBtn.classList.remove('active');
+            wifiBtn.querySelector('.status-text').textContent = "No";
+            wifiBtn.querySelector('.toggle-icon').className = "fas fa-chevron-down toggle-icon";
             
         } else {
             showToast("Error submitting tickets! Please try again.", "error");
@@ -1733,12 +1733,16 @@
         const [y, m, d] = data.date.split('-');
         const formattedDate = `${d}-${m}-${y}`;
 
+        // For display: if backend is blank, show dash, else show value
+        const backendDisplay = data.backend && data.backend.trim() !== '' ? data.backend : '-';
+        
         row.innerHTML = `
             <td style="font-weight:600; font-family: 'Outfit', sans-serif;">${formattedDate}</td>
             <td style="color:var(--primary); font-weight:700; font-family: 'Montserrat', sans-serif;">${data.ticket}</td>
             <td style="font-weight:500;">${data.category}</td>
             <td style="font-weight:600; font-family: 'Outfit', sans-serif;">${data.engineer}</td>
-            <td>${data.backend || '-'}</td>
+            <td>${backendDisplay}</td>
+            <td style="font-weight:600; color:${data.wifiScoring === 'Yes' ? '#059669' : '#6b7280'};">${data.wifiScoring || 'No'}</td> <!-- WiFi Scoring column -->
             <td class="onu-mac" title="${data.onuMac || 'No ONU MAC provided'}">${data.onuMac ? (data.onuMac.length > 15 ? data.onuMac.substring(0, 15) + '...' : data.onuMac) : '-'}</td>
             <td><span class="badge">SYNCED</span></td>
         `;
@@ -1804,24 +1808,3 @@
 
 </body>
 </html>
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
